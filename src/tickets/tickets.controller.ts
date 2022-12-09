@@ -33,6 +33,8 @@ export class TicketsController {
     @Body('jumlah') jumlah: number,
     @Body('waktuasal') waktuasal: number,
     @Body('waktutujuan') waktutujuan: number,
+    @Body('user') user: string,
+    @Body('username') username: string,
   ) {
     return this.ticketService.insertTicket(
       merk,
@@ -43,6 +45,8 @@ export class TicketsController {
       jumlah,
       waktuasal,
       waktutujuan,
+      user,
+      username,
     );
   }
 
@@ -57,6 +61,8 @@ export class TicketsController {
     @Body('jumlah') jumlah: number,
     @Body('waktuasal') waktuasal: number,
     @Body('waktutujuan') waktutujuan: number,
+    @Body('user') user: string,
+    @Body('username') username: string,
   ) {
     return this.ticketService.updateTicket(
       ticketId,
@@ -68,6 +74,8 @@ export class TicketsController {
       jumlah,
       waktuasal,
       waktutujuan,
+      user,
+      username,
     );
   }
 

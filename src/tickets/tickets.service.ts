@@ -33,7 +33,6 @@ export class TicketsService {
     try {
       const querySnapshot = await getDocs(collection(db, 'tickets'));
       querySnapshot.forEach((doc) => {
-        console.log(doc.id, ' => ', doc.data());
         const objTicket = {
           id: doc.id,
           ...doc.data(),
@@ -43,6 +42,7 @@ export class TicketsService {
     } catch (error) {
       console.log(error);
     }
+    console.log(tempTicket);
     return tempTicket;
   }
 
@@ -55,6 +55,8 @@ export class TicketsService {
     jumlah: number,
     waktuasal: number,
     waktutujuan: number,
+    user: string,
+    username: string,
   ) {
     try {
       const tempTicket = {
@@ -66,6 +68,8 @@ export class TicketsService {
         jumlah: jumlah,
         waktuasal: waktuasal,
         waktutujuan: waktutujuan,
+        user: user,
+        username: username,
       };
       await setDoc(doc(collection(db, 'tickets')), tempTicket);
       return 'ticket successfully inserted';
@@ -84,6 +88,8 @@ export class TicketsService {
     jumlah: number,
     waktuasal: number,
     waktutujuan: number,
+    user: string,
+    username: string,
   ) {
     try {
       const tempTicket = {
@@ -95,6 +101,8 @@ export class TicketsService {
         jumlah: jumlah,
         waktuasal: waktuasal,
         waktutujuan: waktutujuan,
+        user: user,
+        username: username,
       };
       await setDoc(doc(db, 'tickets', id), tempTicket);
       return 'ticket successfully edited';
