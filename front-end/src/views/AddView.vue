@@ -8,8 +8,18 @@
         <input type="text" id="inputJenis" placeholder="jenis" required />
         <input type="text" id="inputAsal" placeholder="asal" required />
         <input type="text" id="inputTujuan" placeholder="tujuan" required />
-        <input type="number" id="inputWA" placeholder="waktu asal" required />
-        <input type="number" id="inputWT" placeholder="waktu tujuan" required />
+        <input
+          type="number"
+          id="inputWA"
+          placeholder="waktu asal (timestamp)"
+          required
+        />
+        <input
+          type="number"
+          id="inputWT"
+          placeholder="waktu tujuan (timestamp)"
+          required
+        />
         <input type="number" id="inputHG" placeholder="harga tiket" required />
         <input type="number" id="inputJumlah" placeholder="jumlah" required />
         <input type="submit" Value="Add Ticket" />

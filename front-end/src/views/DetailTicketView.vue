@@ -3,72 +3,74 @@
     <h1>Detail</h1>
     <div v-if="response != 0">{{ this.response }}</div>
     <div v-if="ticket != 0 && loginInfo != null && ticket.user == loginInfo.id">
-      <input
+      Merk:<input
         type="text"
         id="inputMerk"
         placeholder="merk"
         v-model="ticket.merk"
         required
-      />
-      <input
+      /><br />
+      Jenis Kendaraan:<input
         type="text"
         id="inputJenis"
         placeholder="jenis"
         v-model="ticket.jenis"
         required
-      />
-      <input
+      /><br />
+      Tempat Asal:<input
         type="text"
         id="inputAsal"
         placeholder="asal"
         v-model="ticket.asal"
         required
-      />
-      <input
+      /><br />
+      Tempat Tujuan:<input
         type="text"
         id="inputTujuan"
         placeholder="tujuan"
         v-model="ticket.tujuan"
         required
-      />
-      <input
+      /><br />
+      Waktu Berangkat (timestamp):<input
         type="number"
         id="inputWA"
         placeholder="waktu asal"
         v-model="ticket.waktuasal"
         required
-      />
-      <input
+      /><br />
+      Waktu Datang (timestamp):<input
         type="number"
         id="inputWT"
         placeholder="waktu tujuan"
         v-model="ticket.waktutujuan"
         required
-      />
-      <input
+      /><br />
+      Harga:<input
         type="number"
         id="inputHarga"
         placeholder="harga tiket"
         v-model="ticket.harga"
         required
-      />
-      <input
+      /><br />
+      Jumlah Sisa Tiket:<input
         type="number"
         id="inputJumlah"
         placeholder="jumlah"
         v-model="ticket.jumlah"
         required
-      />
+      /><br />
       <button v-on:click="editTicket">Edit Ticket</button>
       <button v-on:click="deleteTicket">Delete Ticket</button>
     </div>
     <div v-else-if="ticket != 0">
       <h3>{{ ticket.id }} | By: {{ ticket.username }}</h3>
-      <p>Merk: {{ ticket.merk }} | Jenis: {{ ticket.jenis }}</p>
-      <p>Destinasi: {{ ticket.asal }}-{{ ticket.tujuan }}</p>
-      <p>Waktu: {{ ticket.waktuasal }}-{{ ticket.waktutujuan }}</p>
-      <p>Harga:{{ ticket.harga }}</p>
-      <p>Jumlah: {{ ticket.jumlah }}</p>
+      <h4>Merk: {{ ticket.merk }} | Jenis: {{ ticket.jenis }}</h4>
+      <h5>Destinasi: {{ ticket.asal }}-{{ ticket.tujuan }}</h5>
+      <h5>
+        Waktu: {{ ticket.readableWaktuasal }}-{{ ticket.readableWaktutujuan }}
+      </h5>
+      <h4>Harga: {{ ticket.harga }}</h4>
+      <h5>Jumlah: {{ ticket.jumlah }}</h5>
     </div>
     <div v-else>
       <p>Ticket not found!</p>
@@ -99,6 +101,7 @@ export default {
       await axios
         .get(`${server.baseURL}/tickets/${this.id}`)
         .then((response) => (this.ticket = response.data));
+      this.ticket.readableWaktuasal = new Date(parseInt(this.ticket.waktuasal));
     },
     async editTicket() {
       await axios
