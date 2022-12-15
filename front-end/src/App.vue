@@ -3,7 +3,8 @@
     <div v-if="loginInfo != null">
       <router-link to="/">Home</router-link> |
       <router-link to="/tickets">Tickets</router-link> |
-      <p @click="logout">Logout</p>
+      <a @click="logout">Logout</a>
+      <p>Welcome {{ loginInfo.username }}!</p>
     </div>
     <div v-else>
       <router-link to="/">Home</router-link> |
@@ -23,6 +24,9 @@ export default {
     };
   },
   mounted() {
+    this.getLoginInfo();
+  },
+  beforeUpdate() {
     this.getLoginInfo();
   },
   methods: {

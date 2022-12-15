@@ -46,7 +46,18 @@ export default {
       if (this.loginInfo != "Unauthorized" && this.loginInfo != null) {
         sessionStorage.setItem("logininfo", JSON.stringify(this.loginInfo));
         this.response = "Login successful! Redirecting ...";
-        setTimeout(() => this.$router.push({ path: "/tickets" }), 3000);
+        let url = document.location.href;
+        url = url.substring(0, url.length - 5);
+        url.concat("tickets");
+        // setTimeout(
+        //   () =>
+        //     this.$router.push({
+        //       path: "/tickets",
+        //       reload: true,
+        //     }),
+        //   3000
+        // );
+        setTimeout(() => (window.location = url), 3000);
       }
     },
     async getLoginInfo() {
