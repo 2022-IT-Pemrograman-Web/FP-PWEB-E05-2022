@@ -32,6 +32,11 @@ const routes = [
     name: "addticket",
     component: () => import("../views/AddView.vue"),
   },
+  {
+    path: "/orders",
+    name: "orderSummary",
+    component: () => import("../views/OrderSummary.vue"),
+  }
 ];
 
 const router = createRouter({
