@@ -36,7 +36,7 @@ const routes = [
     path: "/orders",
     name: "orderSummary",
     component: () => import("../views/OrderSummary.vue"),
-  }
+  },
 ];
 
 const router = createRouter({

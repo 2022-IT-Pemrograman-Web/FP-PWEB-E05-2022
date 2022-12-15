@@ -1,53 +1,115 @@
 <template>
-
-<div class="d-flex justify-content-center">
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-      <div class="container-fluid">
-        <a class="navbar-brand" href="#">TIC-COM</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-          <div v-if="loginInfo != null" class="navbar-nav">
-            <a class="nav-link active" aria-current="page" href="#">Home</a>
-            <a class="nav-link" href="/tickets">Tickets</a>
-            <a class="nav-link" @click="logout">Logout</a>
-              <p>Welcome {{ loginInfo.username }}!</p>
+  <div>
+    <!-- <div class="d-flex justify-content-end">
+      <form style="width: 300px">
+        <div class="d-flex justify-content-end">
+          <input
+            class="form-control me-2"
+            type="search"
+            placeholder="Search"
+            aria-label="Search"
+          />
+          <button class="btn btn-outline-success" type="submit">Search</button>
+        </div>
+      </form>
+    </div> -->
+    <div v-if="carts != null && Object.keys(carts).length !== 0">
+      <div v-for="ticket in filteredTickets" :key="ticket.id">
+        <div v-if="ticket.amount > 0">
+          <div>
+            <router-link
+              :to="{ name: 'detailticket', params: { id: ticket.id } }"
+            >
+              <h3>{{ ticket.id }} | By: {{ ticket.username }}</h3>
+            </router-link>
           </div>
-
-          <div v-else class="navbar-nav">
-            <a class="nav-link active" aria-current="page" href="#">Home</a>
-            <a class="nav-link" href="/tickets">Tickets</a>
-            <a class="nav-link" href="/login">Login</a>
-            <a class="nav-link" href="/register">Register</a>
-          </div>
+          <p>Merk: {{ ticket.merk }} | Jenis: {{ ticket.jenis }}</p>
+          <p>Destinasi: {{ ticket.asal }}-{{ ticket.tujuan }}</p>
+          <p>
+            Waktu: {{ ticket.readableWaktuasal }}-
+            {{ ticket.readableWaktutujuan }}
+          </p>
+          <p>Harga: {{ ticket.harga }}</p>
+          <p>Jumlah: {{ ticket.jumlah }}</p>
+          <button @click="incAmount(ticket)">+</button>
+          <p>{{ ticket.amount }}</p>
+          <button @click="decAmount(ticket)">-</button>
         </div>
       </div>
-      <a class="nav-link" href="/orders">
-        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-basket-fill" viewBox="0 0 16 16">
-        <path d="M5.071 1.243a.5.5 0 0 1 .858.514L3.383 6h9.234L10.07 1.757a.5.5 0 1 1 .858-.514L13.783 6H15.5a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-.5.5H15v5a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V9H.5a.5.5 0 0 1-.5-.5v-2A.5.5 0 0 1 .5 6h1.717L5.07 1.243zM3.5 10.5a.5.5 0 1 0-1 0v3a.5.5 0 0 0 1 0v-3zm2.5 0a.5.5 0 1 0-1 0v3a.5.5 0 0 0 1 0v-3zm2.5 0a.5.5 0 1 0-1 0v3a.5.5 0 0 0 1 0v-3zm2.5 0a.5.5 0 1 0-1 0v3a.5.5 0 0 0 1 0v-3zm2.5 0a.5.5 0 1 0-1 0v3a.5.5 0 0 0 1 0v-3z"/>
-        </svg>
-      </a>
-    </nav>
-  </div>
-
-  <div class="d-flex justify-content-end">
-  <form style="width: 300px">
-    <div class="d-flex justify-content-end">
-    <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-    <button class="btn btn-outline-success" type="submit">Search</button>
     </div>
-  </form>
-</div>
-    
+    <div v-else>
+      <div>
+        <h1>Your cart is empty!</h1>
+        <img src="../assets/emptycart.jpg" alt="empty cart" />
+      </div>
+    </div>
+  </div>
 </template>
 
 <script>
+import { server } from "../utils/helper";
+import axios from "axios";
+
 export default {
   data() {
-    return {};
+    return {
+      tickets: "",
+      filteredTickets: [],
+      carts: {},
+    };
   },
-  mounted() {},
-  methods: {},
+  mounted() {
+    this.id = this.$route.params.id;
+    this.getTickets();
+  },
+  methods: {
+    async getTickets() {
+      if (JSON.parse(sessionStorage.getItem("cart")))
+        this.carts = JSON.parse(sessionStorage.getItem("cart"));
+      await axios
+        .get(`${server.baseURL}/tickets`)
+        .then((response) => (this.tickets = response.data));
+      this.filteredTickets = [];
+      for (let i = 0; i < this.tickets.length; i++) {
+        this.tickets[i].readableWaktuasal = new Date(
+          parseInt(this.tickets[i].waktuasal)
+        );
+        this.tickets[i].readableWaktutujuan = new Date(
+          parseInt(this.tickets[i].waktutujuan)
+        );
+        if (this.carts) {
+          if (
+            this.carts[this.tickets[i].id] &&
+            this.carts[this.tickets[i].id].amount <= this.tickets[i].jumlah
+          )
+            this.tickets[i].amount = this.carts[this.tickets[i].id].amount;
+          else this.tickets[i].amount = 0;
+        } else this.tickets[i].amount = 0;
+        this.filteredTickets.push(this.tickets[i]);
+      }
+    },
+    async incAmount(ticket) {
+      if (ticket.amount < ticket.jumlah) ticket.amount += 1;
+      if (!this.carts[ticket.id]) this.carts[ticket.id] = {};
+      this.carts[ticket.id].id = ticket.id;
+      this.carts[ticket.id].jenis = ticket.jenis;
+      this.carts[ticket.id].merk = ticket.merk;
+      this.carts[ticket.id].amount = ticket.amount;
+      await this.saveCart();
+    },
+    async decAmount(ticket) {
+      if (ticket.amount > 0) ticket.amount -= 1;
+      if (!this.carts[ticket.id]) this.carts[ticket.id] = {};
+      this.carts[ticket.id].id = ticket.id;
+      this.carts[ticket.id].jenis = ticket.jenis;
+      this.carts[ticket.id].merk = ticket.merk;
+      this.carts[ticket.id].amount = ticket.amount;
+      if (this.carts[ticket.id].amount == 0) delete this.carts[ticket.id];
+      await this.saveCart();
+    },
+    async saveCart() {
+      await sessionStorage.setItem("cart", JSON.stringify(this.carts));
+    },
+  },
 };
 </script>
