@@ -1,10 +1,42 @@
 <template>
   <nav>
-    <router-link to="/">Home</router-link> |
-    <router-link to="/tickets">Tickets</router-link>
+    <div v-if="loginInfo != null">
+      <router-link to="/">Home</router-link> |
+      <router-link to="/tickets">Tickets</router-link> |
+      <p @click="logout">Logout</p>
+    </div>
+    <div v-else>
+      <router-link to="/">Home</router-link> |
+      <router-link to="/tickets">Tickets</router-link> |
+      <router-link to="/login">Login</router-link> |
+      <router-link to="/register">Register</router-link>
+    </div>
   </nav>
   <router-view />
 </template>
+
+<script>
+export default {
+  data() {
+    return {
+      loginInfo: null,
+    };
+  },
+  mounted() {
+    this.getLoginInfo();
+  },
+  methods: {
+    async getLoginInfo() {
+      this.loginInfo = JSON.parse(sessionStorage.getItem("logininfo"));
+    },
+    async logout() {
+      sessionStorage.clear();
+      this.getLoginInfo();
+      this.$router.go();
+    },
+  },
+};
+</script>
 
 <style>
 #app {
@@ -20,6 +52,11 @@ nav {
 }
 
 nav a {
+  font-weight: bold;
+  color: #2c3e50;
+}
+
+nav p {
   font-weight: bold;
   color: #2c3e50;
 }

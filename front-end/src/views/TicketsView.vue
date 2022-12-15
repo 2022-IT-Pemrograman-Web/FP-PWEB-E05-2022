@@ -16,7 +16,7 @@
         <p>Merk: {{ ticket.merk }} | Jenis: {{ ticket.jenis }}</p>
         <p>Destinasi: {{ ticket.asal }}-{{ ticket.tujuan }}</p>
         <p>Waktu: {{ ticket.waktuasal }}-{{ ticket.waktutujuan }}</p>
-        <p>Harga:{{ ticket.harga }}</p>
+        <p>Harga: {{ ticket.harga }}</p>
         <p>Jumlah: {{ ticket.jumlah }}</p>
       </div>
     </div>
@@ -38,8 +38,8 @@ export default {
     this.getTickets();
   },
   methods: {
-    getTickets() {
-      axios
+    async getTickets() {
+      await axios
         .get(`${server.baseURL}/tickets`)
         .then((response) => (this.tickets = response.data));
     },
