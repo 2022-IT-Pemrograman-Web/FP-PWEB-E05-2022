@@ -5,7 +5,7 @@
       <router-link :to="{ name: 'addticket' }">Add Ticket</router-link>
     </div>
     <div>
-      <div v-for="ticket in tickets" :key="ticket.id">
+      <div v-for="ticket in filteredTickets" :key="ticket.id">
         <div>
           <router-link
             :to="{ name: 'detailticket', params: { id: ticket.id } }"
@@ -15,7 +15,10 @@
         </div>
         <p>Merk: {{ ticket.merk }} | Jenis: {{ ticket.jenis }}</p>
         <p>Destinasi: {{ ticket.asal }}-{{ ticket.tujuan }}</p>
-        <p>Waktu: {{ ticket.waktuasal }}-{{ ticket.waktutujuan }}</p>
+        <p>
+          Waktu: {{ ticket.waktuasal }}-
+          {{ ticket.waktutujuan }}
+        </p>
         <p>Harga: {{ ticket.harga }}</p>
         <p>Jumlah: {{ ticket.jumlah }}</p>
       </div>
@@ -31,6 +34,7 @@ export default {
   data() {
     return {
       tickets: "",
+      filteredTickets: [],
     };
   },
   mounted() {
@@ -42,6 +46,21 @@ export default {
       await axios
         .get(`${server.baseURL}/tickets`)
         .then((response) => (this.tickets = response.data));
+      this.filteredTickets = [];
+      for (let i = 0; i < this.tickets.length; i++) {
+        this.filteredTickets.push(this.tickets[i]);
+      }
+    },
+    async filterTickets() {
+      // Clear array
+      this.filteredTickets = [];
+      // get filter element from document
+      for (let i = 0; i < this.tickets.length; i++) {
+        console.log(this.tickets[i]);
+        if (this.tickets[i].username == "admin" /*cek filter*/) {
+          this.filteredTickets.push(this.tickets[i]);
+        }
+      }
     },
   },
 };
