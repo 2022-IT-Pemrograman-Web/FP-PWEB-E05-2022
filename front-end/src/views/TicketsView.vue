@@ -4,6 +4,13 @@
       <h1>Daftar Tiket</h1>
       <router-link :to="{ name: 'addticket' }">Add Ticket</router-link>
     </div>
+    <h2>Items in cart:</h2>
+    <div v-for="item in carts" :key="item">
+      <h3>
+        {{ item.id }}: {{ item.jenis }} --- {{ item.merk }} (Jumlah:
+        {{ item.amount }})
+      </h3>
+    </div>
     <h1>Search:</h1>
     <form id="ticketFilter" @submit="filterTickets">
       Nama Penjual:<input
@@ -52,6 +59,9 @@
         </p>
         <p>Harga: {{ ticket.harga }}</p>
         <p>Jumlah: {{ ticket.jumlah }}</p>
+        <button @click="incAmount(ticket)">+</button>
+        <p>{{ ticket.amount }}</p>
+        <button @click="decAmount(ticket)">-</button>
       </div>
     </div>
   </div>
@@ -66,6 +76,7 @@ export default {
     return {
       tickets: "",
       filteredTickets: [],
+      carts: {},
     };
   },
   mounted() {
@@ -74,6 +85,8 @@ export default {
   },
   methods: {
     async getTickets() {
+      if (JSON.parse(sessionStorage.getItem("cart")))
+        this.carts = JSON.parse(sessionStorage.getItem("cart"));
       await axios
         .get(`${server.baseURL}/tickets`)
         .then((response) => (this.tickets = response.data));
@@ -85,6 +98,14 @@ export default {
         this.tickets[i].readableWaktutujuan = new Date(
           parseInt(this.tickets[i].waktutujuan)
         );
+        if (this.carts) {
+          if (
+            this.carts[this.tickets[i].id] &&
+            this.carts[this.tickets[i].id].amount <= this.tickets[i].jumlah
+          )
+            this.tickets[i].amount = this.carts[this.tickets[i].id].amount;
+          else this.tickets[i].amount = 0;
+        } else this.tickets[i].amount = 0;
         this.filteredTickets.push(this.tickets[i]);
       }
     },
@@ -143,6 +164,28 @@ export default {
           this.filteredTickets.push(this.tickets[i]);
         }
       }
+    },
+    async incAmount(ticket) {
+      if (ticket.amount < ticket.jumlah) ticket.amount += 1;
+      if (!this.carts[ticket.id]) this.carts[ticket.id] = {};
+      this.carts[ticket.id].id = ticket.id;
+      this.carts[ticket.id].jenis = ticket.jenis;
+      this.carts[ticket.id].merk = ticket.merk;
+      this.carts[ticket.id].amount = ticket.amount;
+      await this.saveCart();
+    },
+    async decAmount(ticket) {
+      if (ticket.amount > 0) ticket.amount -= 1;
+      if (!this.carts[ticket.id]) this.carts[ticket.id] = {};
+      this.carts[ticket.id].id = ticket.id;
+      this.carts[ticket.id].jenis = ticket.jenis;
+      this.carts[ticket.id].merk = ticket.merk;
+      this.carts[ticket.id].amount = ticket.amount;
+      if (this.carts[ticket.id].amount == 0) delete this.carts[ticket.id];
+      await this.saveCart();
+    },
+    async saveCart() {
+      await sessionStorage.setItem("cart", JSON.stringify(this.carts));
     },
   },
 };

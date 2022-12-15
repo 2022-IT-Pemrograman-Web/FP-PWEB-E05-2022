@@ -48,7 +48,7 @@ export default {
         this.response = "Login successful! Redirecting ...";
         let url = document.location.href;
         url = url.substring(0, url.length - 5);
-        url.concat("tickets");
+        url = url + "tickets";
         // setTimeout(
         //   () =>
         //     this.$router.push({
