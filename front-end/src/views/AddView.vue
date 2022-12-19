@@ -11,17 +11,18 @@
         <input
           type="number"
           id="inputWA"
-          placeholder="waktu asal (timestamp)"
+          placeholder="waktu asal (hh:mm:ss)"
           required
         />
         <input
           type="number"
           id="inputWT"
-          placeholder="waktu tujuan (timestamp)"
+          placeholder="waktu tujuan (hh:mm:ss)"
           required
         />
         <input type="number" id="inputHG" placeholder="harga tiket" required />
         <input type="number" id="inputJumlah" placeholder="jumlah" required />
+        <input type="text" id="inputDeskripsi" placeholder="Deskripsi Tiket" required />
         <input type="submit" Value="Add Ticket" />
       </form>
     </div>
@@ -54,6 +55,7 @@ export default {
       const inputWA = document.getElementById("inputWA").value;
       const inputWT = document.getElementById("inputWT").value;
       const inputHG = document.getElementById("inputHG").value;
+      const inputDeskripsi = document.getElementById("inputDeskripsi").value;
       const inputJumlah = document.getElementById("inputJumlah").value;
       const ticket = {
         merk: inputMerk,
@@ -64,6 +66,7 @@ export default {
         jumlah: inputJumlah,
         waktuasal: inputWA,
         waktutujuan: inputWT,
+        deskripsi: inputDeskripsi,
         user: this.loginInfo.id,
         username: this.loginInfo.username,
       };

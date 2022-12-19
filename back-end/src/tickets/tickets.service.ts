@@ -57,6 +57,7 @@ export class TicketsService {
     waktutujuan: number,
     user: string,
     username: string,
+    deskripsi: string,
   ) {
     try {
       const tempTicket = {
@@ -70,6 +71,7 @@ export class TicketsService {
         waktutujuan: waktutujuan,
         user: user,
         username: username,
+        deskripsi: deskripsi,
       };
       await setDoc(doc(collection(db, 'tickets')), tempTicket);
       return 'ticket successfully inserted';
@@ -90,6 +92,7 @@ export class TicketsService {
     waktutujuan: number,
     user: string,
     username: string,
+    deskripsi: string,
   ) {
     try {
       const tempTicket = {
@@ -103,6 +106,7 @@ export class TicketsService {
         waktutujuan: waktutujuan,
         user: user,
         username: username,
+        deskripsi: deskripsi,
       };
       await setDoc(doc(db, 'tickets', id), tempTicket);
       return 'ticket successfully edited';

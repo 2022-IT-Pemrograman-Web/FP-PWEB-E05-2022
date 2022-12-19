@@ -56,7 +56,7 @@
         <p>Merk: {{ ticket.merk }} | Jenis: {{ ticket.jenis }}</p>
         <p>Destinasi: {{ ticket.asal }}-{{ ticket.tujuan }}</p>
         <p>
-          Waktu: {{ ticket.readableWaktuasal }}-
+          CEK Waktu: {{ ticket.readableWaktuasal }}-
           {{ ticket.readableWaktutujuan }}
         </p>
         <p>Harga: {{ ticket.harga }}</p>

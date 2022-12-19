@@ -59,6 +59,13 @@
         v-model="ticket.jumlah"
         required
       /><br />
+      Deskripsi Tiket:<input
+        type="text"
+        id="inputDeskripsi"
+        placeholder="deskripsi tiket"
+        v-model="ticket.deskripsi"
+        required
+      /><br />
       <button v-on:click="editTicket">Edit Ticket</button>
       <button v-on:click="deleteTicket">Delete Ticket</button>
     </div>
@@ -70,6 +77,11 @@
         Waktu: {{ ticket.readableWaktuasal }}-{{ ticket.readableWaktutujuan }}
       </h5>
       <h4>Harga: {{ ticket.harga }}</h4>
+      <h4>
+        ===============DESKRIPSI TIKET===============
+        {{ ticket.deskripsi }}
+        =============================================
+      </h4>
       <h5>Jumlah: {{ ticket.jumlah }}</h5>
     </div>
     <div v-else>
